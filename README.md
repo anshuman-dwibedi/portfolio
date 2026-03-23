@@ -1,7 +1,7 @@
-# Developer Portfolio
+﻿# Developer Portfolio
 ### Part of the DevCore Portfolio Suite
 
-A production-grade personal developer portfolio — single `index.php` file —
+A production-grade personal developer portfolio â€” single `index.php` file â€”
 built on the DevCore shared library. Every section answers the question a
 hiring manager or client is silently asking: **"Can this person solve my problem?"**
 
@@ -32,11 +32,11 @@ devcore-suite-clean/
         _icons.css
         ...
   projects/
-    portfolio/          ← place this folder here
+    portfolio/          â† place this folder here
       index.php
       api/
         contact.php
-      contact_log.txt   ← created automatically on first submission
+      contact_log.txt   â† created automatically on first submission
       README.md
     restaurant-qr-ordering/
     real-estate-listings/
@@ -44,7 +44,7 @@ devcore-suite-clean/
     medical-booking-system/
 ```
 
-The portfolio expects the core library at `../../core/` relative to `index.php`.
+The portfolio expects the core library at `./core/` relative to `index.php`.
 
 ---
 
@@ -57,7 +57,7 @@ The portfolio expects the core library at `../../core/` relative to `index.php`.
 $dev = [
     'name'       => 'Your Name',
     'title'      => 'PHP & JS Developer',
-    'tagline'    => 'Remote · Part-time · Contract · Freelance',
+    'tagline'    => 'Remote Â· Part-time Â· Contract Â· Freelance',
     'email'      => 'you@example.com',
     'github'     => 'github.com/yourusername',
     'github_url' => 'https://github.com/yourusername',
@@ -75,7 +75,7 @@ $dev = [
 
 ### Name, email, GitHub
 Edit the `$dev` array at the top of `index.php`. All occurrences are generated
-from that single block — no find-and-replace needed.
+from that single block â€” no find-and-replace needed.
 
 ### Work types and rates
 The four work-type cards in the About section and the contact form select options
@@ -87,7 +87,7 @@ This appears in the Part-time work card.
 
 ### Project links
 Search for `../restaurant-qr-ordering/index.php` etc. in `index.php` and update to
-your actual live demo URLs. For GitHub links, update `$dev['github_url']` — the
+your actual live demo URLs. For GitHub links, update `$dev['github_url']` â€” the
 project card links append `/project-name` to that base URL.
 
 ### Skills and proficiency bars
@@ -95,7 +95,7 @@ Each skill card has a `data-width` attribute on the fill bar element (e.g. `data
 Update the percentage value and the visible text to reflect your actual skill level.
 
 ### Colours / accent
-The design system tokens live in `../../core/ui/parts/_tokens.css`.
+The design system tokens live in `./core/ui/parts/_tokens.css`.
 Override per-project by adding CSS variables to the `<style>` block in `index.php`:
 
 ```css
@@ -145,7 +145,7 @@ The `api/contact.php` file includes a commented-out PHPMailer block. To enable:
 3. Fill in your SMTP credentials
 4. Optionally keep the file log as a backup
 
-You can also replace the log with a database insert using `Database::getInstance()` —
+You can also replace the log with a database insert using `Database::getInstance()` â€”
 the bootstrap is already loaded.
 
 ---
@@ -170,9 +170,9 @@ the bootstrap is already loaded.
 
 ```
 devcore-suite-clean/
-  core/               ← shared library (Database, Api, Auth, Storage...)
+  core/               â† shared library (Database, Api, Auth, Storage...)
   projects/
-    portfolio/        ← this file
+    portfolio/        â† this file
     restaurant-qr-ordering/
     real-estate-listings/
     ecommerce-live-store/
@@ -180,3 +180,4 @@ devcore-suite-clean/
 ```
 
 All five projects share one core library. The portfolio is the proof.
+
