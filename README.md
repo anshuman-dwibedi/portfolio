@@ -1,10 +1,10 @@
-﻿# Developer Portfolio
+# Developer Portfolio
 
 A production-grade personal developer portfolio designed as a sales page for hiring managers and freelance clients. Built on the DevCore Shared Library.
 
 Single-page application showcasing skills, projects, experience, and a live contact form. Minimal, clean design focused on conversions rather than aesthetics.
 
-**Part of the DevCore Suite** â€” a collection of business-ready web applications sharing a common core library.
+**Part of the DevCore Suite** — a collection of business-ready web applications sharing a common core library.
 
 ---
 
@@ -39,18 +39,18 @@ Single-page application showcasing skills, projects, experience, and a live cont
 
 ```
 portfolio/
-â”œâ”€â”€ index.php                   Main portfolio page (all in one file)
-â”œâ”€â”€ config.example.php          Configuration template
-â”œâ”€â”€ contact_log.txt             Contact submissions log (created automatically)
-â”œâ”€â”€ .env.example                Environment variables template
-â”‚
-â”œâ”€â”€ api/
-â”‚   â””â”€â”€ contact.php             POST contact form (client-side JavaScript submits here)
-â”‚
-â””â”€â”€ core/                       DevCore shared library (git submodule)
-    â”œâ”€â”€ bootstrap.php           Autoloader + config loader
-    â”œâ”€â”€ backend/                PHP classes (Validator, etc.)
-    â””â”€â”€ ui/                     CSS framework + JavaScript utilities
+├── index.php                   Main portfolio page (all in one file)
+├── config.example.php          Configuration template
+├── contact_log.txt             Contact submissions log (created automatically)
+├── .env.example                Environment variables template
+│
+├── api/
+│   └── contact.php             POST contact form (client-side JavaScript submits here)
+│
+└── core/                       DevCore shared library (git submodule)
+    ├── bootstrap.php           Autoloader + config loader
+    ├── backend/                PHP classes (Validator, etc.)
+    └── ui/                     CSS framework + JavaScript utilities
 ```
 
 ---
@@ -97,7 +97,7 @@ Edit the `$dev` configuration array at the top of `index.php`:
 $dev = [
     'name'       => 'Your Name',
     'title'      => 'PHP & JavaScript Developer',
-    'tagline'    => 'Remote Â· Full-time Â· Contract Â· Freelance',
+    'tagline'    => 'Remote · Full-time · Contract · Freelance',
     'email'      => 'you@example.com',
     'github'     => 'github.com/yourname',
     'github_url' => 'https://github.com/yourname',
@@ -162,7 +162,7 @@ At the top of `index.php`, edit the `$dev` array to personalize your portfolio:
 ```php
 'hours'      => '40',          // hours per week
 'location'   => 'Remote',     // or specific location
-'tagline'    => 'Full-time Â· Contract Â· Freelance',
+'tagline'    => 'Full-time · Contract · Freelance',
 ```
 
 **Work Rates:**
@@ -207,7 +207,7 @@ The entire portfolio is one `index.php` file containing:
 - Inline JavaScript for interactivity
 - CSS styling
 
-This keeps deployment simple â€” just copy one file.
+This keeps deployment simple — just copy one file.
 
 ### Contact Form
 
@@ -325,10 +325,10 @@ if ($mail->send()) {
 
 ### Where to Configure
 
-- `Host` â€” Your SMTP server (Gmail, SendGrid, etc.)
-- `Username` â€” Your email address
-- `Password` â€” App-specific password (for Gmail, use app passwords)
-- `addAddress()` â€” Where notifications are sent
+- `Host` — Your SMTP server (Gmail, SendGrid, etc.)
+- `Username` — Your email address
+- `Password` — App-specific password (for Gmail, use app passwords)
+- `addAddress()` — Where notifications are sent
 
 ---
 
@@ -351,9 +351,8 @@ Create `.env` or configure in config.php:
 
 ## License
 
-MIT License â€” see LICENSE file.
+MIT License — see LICENSE file.
 
 ---
 
 **Questions?** Visit [DevCore Shared Library](https://github.com/anshuman-dwibedi/devcore-shared) repository.
-
