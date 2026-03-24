@@ -282,53 +282,32 @@ Edit project cards in `index.php` HTML section.
 
 **Contact notifications not working**
 - Basic setup logs to file only
-- To enable email: See "Swap to SMTP email" section below
+- To enable email: see "SMTP email + acknowledgement" below
 
----
+### SMTP email + acknowledgement
 
-## Advanced: Email Notifications
+`api/contact.php` now supports SMTP using PHPMailer, including:
+- owner notification email (`CONTACT_EMAIL`)
+- sender acknowledgement email ("We received your message")
+- automatic fallback to file logging if SMTP fails
 
-By default, contact submissions are logged to `contact_log.txt`. To send email notifications instead:
+1. Install PHPMailer: `composer require phpmailer/phpmailer`
+2. Set SMTP environment variables in `.env`:
 
-### Option 1: Install PHPMailer
-
-```bash
-composer require phpmailer/phpmailer
+```dotenv
+CONTACT_EMAIL=you@yourdomain.com
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=your-email@gmail.com
+MAIL_PASS=your-google-app-password
+MAIL_FROM=your-email@gmail.com
+MAIL_FROM_NAME=Portfolio
+MAIL_ENCRYPTION=tls
 ```
 
-### Option 2: Uncomment SMTP Block
+3. Keep `contact_log.txt` enabled as a backup audit trail
 
-In `api/contact.php`, find the PHPMailer configuration (currently commented) and uncomment:
-
-```php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-$mail = new PHPMailer(true);
-$mail->isSMTP();
-$mail->Host       = 'smtp.gmail.com';         // Your SMTP server
-$mail->SMTPAuth   = true;
-$mail->Username   = 'your-email@gmail.com';  // Your email
-$mail->Password   = 'app-password';          // App-specific password
-$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-$mail->Port       = 587;
-
-$mail->setFrom('your-email@gmail.com', 'Portfolio Contact');
-$mail->addAddress('your-email@gmail.com');  // Where to send notifications
-$mail->Subject = "New Contact Form Submission";
-$mail->Body = $message;
-
-if ($mail->send()) {
-    echo json_encode(['status' => 'success', 'message' => 'Message sent!']);
-}
-```
-
-### Where to Configure
-
-- `Host` — Your SMTP server (Gmail, SendGrid, etc.)
-- `Username` — Your email address
-- `Password` — App-specific password (for Gmail, use app passwords)
-- `addAddress()` — Where notifications are sent
+For Gmail, use a Google App Password (not your regular account password).
 
 ---
 
@@ -341,11 +320,16 @@ Create `.env` or configure in config.php:
 | APP_NAME | Portfolio title |
 | APP_URL | Public URL for links |
 | DEBUG | Debug mode (true/false) |
-| CONTACT_LOG_PATH | Where to save contact submissions (default: ./contact_log.txt) |
-| CONTACT_EMAIL | Email to notify on submissions (for SMTP setup) |
-| SMTP_HOST | SMTP server for email (advanced) |
-| SMTP_USER | SMTP username (advanced) |
-| SMTP_PASS | SMTP password (advanced) |
+| CONTACT_EMAIL | Owner inbox for contact notifications |
+| CONTACT_RATE_LIMIT | Max submissions per IP in window (default: 5) |
+| CONTACT_RATE_WINDOW | Rate-limit window in seconds (default: 600) |
+| MAIL_HOST | SMTP host (for example: smtp.gmail.com) |
+| MAIL_PORT | SMTP port (587 for TLS) |
+| MAIL_USER | SMTP username/email |
+| MAIL_PASS | SMTP app password |
+| MAIL_FROM | Sender email address |
+| MAIL_FROM_NAME | Sender display name |
+| MAIL_ENCRYPTION | tls or ssl |
 
 ---
 
