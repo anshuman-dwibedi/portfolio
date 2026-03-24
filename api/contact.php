@@ -98,9 +98,12 @@ function is_rate_limited(string $ip, int $limit, int $windowSeconds, string $rat
     return $limited;
 }
 
-function send_mail(string $to, string $subject, string $textBody, string $htmlBody = ''): bool {
+function send_mail(string $to, string $subject, string $textBody, string $htmlBody = ''): array {
     if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
-        return false;
+        return [
+            'sent' => false,
+            'error' => 'PHPMailer class not found (vendor/autoload missing or dependency not installed)',
+        ];
     }
 
     $host = (string)cfg('MAIL_HOST', '');
@@ -113,7 +116,10 @@ function send_mail(string $to, string $subject, string $textBody, string $htmlBo
 
     if ($host === '' || $user === '' || $pass === '' || $from === '') {
         error_log('Portfolio contact SMTP skipped: missing MAIL_HOST/MAIL_USER/MAIL_PASS/MAIL_FROM');
-        return false;
+        return [
+            'sent' => false,
+            'error' => 'Missing MAIL_HOST/MAIL_USER/MAIL_PASS/MAIL_FROM',
+        ];
     }
 
     try {
@@ -139,10 +145,16 @@ function send_mail(string $to, string $subject, string $textBody, string $htmlBo
         $mail->isHTML(true);
         $mail->send();
 
-        return true;
+        return [
+            'sent' => true,
+            'error' => '',
+        ];
     } catch (Throwable $e) {
         error_log('Portfolio contact SMTP error: ' . $e->getMessage());
-        return false;
+        return [
+            'sent' => false,
+            'error' => $e->getMessage(),
+        ];
     }
 }
 
@@ -206,14 +218,23 @@ $ownerSubject = "Portfolio contact from {$name}";
 $ownerText = "Name: {$name}\nEmail: {$email}\nWork type: {$workType}\nBudget: {$budget}\n\nMessage:\n{$message}";
 $ownerHtml = "<h3>New Portfolio Contact</h3><p><strong>Name:</strong> {$name}<br><strong>Email:</strong> {$email}<br><strong>Work type:</strong> {$workType}<br><strong>Budget:</strong> {$budget}</p><p><strong>Message:</strong><br>" . nl2br($message) . '</p>';
 
-$ownerSent = $ownerEmail !== '' ? send_mail($ownerEmail, $ownerSubject, $ownerText, $ownerHtml) : false;
+$ownerResult = $ownerEmail !== ''
+    ? send_mail($ownerEmail, $ownerSubject, $ownerText, $ownerHtml)
+    : ['sent' => false, 'error' => 'Missing CONTACT_EMAIL'];
+$ownerSent = (bool)($ownerResult['sent'] ?? false);
+$ownerError = (string)($ownerResult['error'] ?? '');
 
 $ackSubject = 'We received your message';
 $ackText = "Hi {$name},\n\nThanks for contacting me. I received your message and will reply within 24 hours.\n\nYour message:\n{$message}\n\nBest regards,\n" . (string)cfg('APP_NAME', 'Portfolio');
 $ackHtml = "<p>Hi {$name},</p><p>Thanks for contacting me. I received your message and will reply within 24 hours.</p><p><strong>Your message:</strong><br>" . nl2br($message) . '</p><p>Best regards,<br>' . htmlspecialchars((string)cfg('APP_NAME', 'Portfolio'), ENT_QUOTES, 'UTF-8') . '</p>';
-$ackSent = send_mail($email, $ackSubject, $ackText, $ackHtml);
+$ackResult = send_mail($email, $ackSubject, $ackText, $ackHtml);
+$ackSent = (bool)($ackResult['sent'] ?? false);
+$ackError = (string)($ackResult['error'] ?? '');
 
-$logLine = "[{$date}] | {$name} | {$email} | {$workType} | {$budget} | owner_mail=" . ($ownerSent ? 'sent' : 'not_sent') . " | ack_mail=" . ($ackSent ? 'sent' : 'not_sent') . " | {$message}" . PHP_EOL;
+$ownerErrorLog = $ownerError !== '' ? str_replace(["\r", "\n", '|'], [' ', ' ', '/'], $ownerError) : '';
+$ackErrorLog = $ackError !== '' ? str_replace(["\r", "\n", '|'], [' ', ' ', '/'], $ackError) : '';
+
+$logLine = "[{$date}] | {$name} | {$email} | {$workType} | {$budget} | owner_mail=" . ($ownerSent ? 'sent' : 'not_sent') . " | ack_mail=" . ($ackSent ? 'sent' : 'not_sent') . " | owner_err={$ownerErrorLog} | ack_err={$ackErrorLog} | {$message}" . PHP_EOL;
 $logLine .= str_repeat('-', 100) . PHP_EOL;
 
 $written = file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
