@@ -18,6 +18,14 @@ require_once dirname(__DIR__) . '/core/bootstrap.php';
 $vendorAutoload = dirname(__DIR__) . '/vendor/autoload.php';
 if (is_file($vendorAutoload)) {
     require_once $vendorAutoload;
+
+    if (class_exists('Dotenv\\Dotenv')) {
+        try {
+            Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+        } catch (Throwable $e) {
+            error_log('Portfolio dotenv load warning: ' . $e->getMessage());
+        }
+    }
 }
 
 /* ─── Helpers ────────────────────────────────────────────────── */
@@ -32,6 +40,14 @@ function cfg(string $key, mixed $default = null): mixed {
     $envVal = getenv($key);
     if ($envVal !== false && $envVal !== '') {
         return $envVal;
+    }
+
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return $_ENV[$key];
+    }
+
+    if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+        return $_SERVER[$key];
     }
 
     $configKey = strtolower($key);
@@ -96,6 +112,7 @@ function send_mail(string $to, string $subject, string $textBody, string $htmlBo
     $encryption = strtolower((string)cfg('MAIL_ENCRYPTION', 'tls'));
 
     if ($host === '' || $user === '' || $pass === '' || $from === '') {
+        error_log('Portfolio contact SMTP skipped: missing MAIL_HOST/MAIL_USER/MAIL_PASS/MAIL_FROM');
         return false;
     }
 

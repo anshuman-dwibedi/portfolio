@@ -291,8 +291,8 @@ Edit project cards in `index.php` HTML section.
 - sender acknowledgement email ("We received your message")
 - automatic fallback to file logging if SMTP fails
 
-1. Install PHPMailer: `composer require phpmailer/phpmailer`
-2. Set SMTP environment variables in `.env`:
+1. Install dependencies (PHPMailer + Dotenv): `composer require phpmailer/phpmailer vlucas/phpdotenv`
+2. Create `.env` from `.env.example` and set SMTP environment variables:
 
 ```dotenv
 CONTACT_EMAIL=you@yourdomain.com
@@ -313,7 +313,7 @@ For Gmail, use a Google App Password (not your regular account password).
 
 ## Environment Variables
 
-Create `.env` or configure in config.php:
+Create `.env` from `.env.example` in the portfolio root. The API loads these values via `vlucas/phpdotenv`.
 
 | Variable | Purpose |
 |----------|---------|
@@ -330,6 +330,8 @@ Create `.env` or configure in config.php:
 | MAIL_FROM | Sender email address |
 | MAIL_FROM_NAME | Sender display name |
 | MAIL_ENCRYPTION | tls or ssl |
+
+If `.env` is missing or SMTP fields are empty, contact submissions will still be logged to `contact_log.txt` but mail flags will show `owner_mail=not_sent` and `ack_mail=not_sent`.
 
 ---
 
