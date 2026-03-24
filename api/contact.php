@@ -12,7 +12,7 @@
  */
 
 /* ─── Bootstrap ──────────────────────────────────────────────── */
-require_once dirname(__DIR__, 3) . '/core/bootstrap.php';
+require_once dirname(__DIR__) . '/core/bootstrap.php';
 
 /* ─── Method guard ───────────────────────────────────────────── */
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
