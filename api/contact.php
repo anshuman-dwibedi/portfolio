@@ -124,6 +124,8 @@ function send_mail(string $to, string $subject, string $textBody, string $htmlBo
 
     try {
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
         $mail->isSMTP();
         $mail->Host = $host;
         $mail->Port = $port;
