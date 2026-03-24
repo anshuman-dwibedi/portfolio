@@ -212,11 +212,37 @@ if (!is_dir($logDir)) {
 
 $date    = date('Y-m-d H:i:s');
 $ownerEmail = (string)cfg('CONTACT_EMAIL', '');
+$appName = htmlspecialchars((string)cfg('APP_NAME', 'Portfolio'), ENT_QUOTES, 'UTF-8');
+$appUrl = htmlspecialchars((string)cfg('APP_URL', '#'), ENT_QUOTES, 'UTF-8');
+$safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+$safeEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+$safeWorkType = htmlspecialchars($workType, ENT_QUOTES, 'UTF-8');
+$safeBudget = htmlspecialchars($budget, ENT_QUOTES, 'UTF-8');
+$safeMessageHtml = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
 
 /* ─── Mail send (owner + acknowledgement) ───────────────────── */
 $ownerSubject = "Portfolio contact from {$name}";
 $ownerText = "Name: {$name}\nEmail: {$email}\nWork type: {$workType}\nBudget: {$budget}\n\nMessage:\n{$message}";
-$ownerHtml = "<h3>New Portfolio Contact</h3><p><strong>Name:</strong> {$name}<br><strong>Email:</strong> {$email}<br><strong>Work type:</strong> {$workType}<br><strong>Budget:</strong> {$budget}</p><p><strong>Message:</strong><br>" . nl2br($message) . '</p>';
+$ownerHtml = '<div style="background:#0b1220;padding:28px 0;font-family:Segoe UI,Arial,sans-serif;color:#e8edf4;">'
+    . '<div style="max-width:640px;margin:0 auto;background:#111a2b;border:1px solid #22344f;border-radius:14px;overflow:hidden;">'
+    . '<div style="padding:18px 22px;background:linear-gradient(135deg,#0f1728 0%,#16243b 100%);border-bottom:1px solid #22344f;">'
+    . '<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#88a2c8;">' . $appName . '</div>'
+    . '<div style="font-size:20px;font-weight:700;color:#f5f8ff;margin-top:6px;">New Contact Request</div>'
+    . '</div>'
+    . '<div style="padding:20px 22px;">'
+    . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:14px;">'
+    . '<tr><td style="padding:8px 0;color:#8ea5c9;width:130px;">Name</td><td style="padding:8px 0;color:#f5f8ff;">' . $safeName . '</td></tr>'
+    . '<tr><td style="padding:8px 0;color:#8ea5c9;">Email</td><td style="padding:8px 0;color:#f5f8ff;">' . $safeEmail . '</td></tr>'
+    . '<tr><td style="padding:8px 0;color:#8ea5c9;">Work Type</td><td style="padding:8px 0;color:#f5f8ff;">' . $safeWorkType . '</td></tr>'
+    . '<tr><td style="padding:8px 0;color:#8ea5c9;">Budget</td><td style="padding:8px 0;color:#f5f8ff;">' . $safeBudget . '</td></tr>'
+    . '</table>'
+    . '<div style="margin-top:14px;background:#0d1525;border:1px solid #22344f;border-radius:10px;padding:14px;">'
+    . '<div style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#88a2c8;margin-bottom:8px;">Message</div>'
+    . '<div style="font-size:14px;line-height:1.6;color:#dce6f5;">' . $safeMessageHtml . '</div>'
+    . '</div>'
+    . '</div>'
+    . '</div>'
+    . '</div>';
 
 $ownerResult = $ownerEmail !== ''
     ? send_mail($ownerEmail, $ownerSubject, $ownerText, $ownerHtml)
@@ -226,7 +252,24 @@ $ownerError = (string)($ownerResult['error'] ?? '');
 
 $ackSubject = 'We received your message';
 $ackText = "Hi {$name},\n\nThanks for contacting me. I received your message and will reply within 24 hours.\n\nYour message:\n{$message}\n\nBest regards,\n" . (string)cfg('APP_NAME', 'Portfolio');
-$ackHtml = "<p>Hi {$name},</p><p>Thanks for contacting me. I received your message and will reply within 24 hours.</p><p><strong>Your message:</strong><br>" . nl2br($message) . '</p><p>Best regards,<br>' . htmlspecialchars((string)cfg('APP_NAME', 'Portfolio'), ENT_QUOTES, 'UTF-8') . '</p>';
+$ackHtml = '<div style="background:#0b1220;padding:28px 0;font-family:Segoe UI,Arial,sans-serif;color:#e8edf4;">'
+    . '<div style="max-width:640px;margin:0 auto;background:#111a2b;border:1px solid #22344f;border-radius:14px;overflow:hidden;">'
+    . '<div style="padding:22px;background:linear-gradient(135deg,#0d1423 0%,#173055 100%);border-bottom:1px solid #22344f;">'
+    . '<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9fc6ff;">' . $appName . '</div>'
+    . '<div style="font-size:22px;font-weight:700;color:#ffffff;margin-top:8px;">Message Received</div>'
+    . '<div style="font-size:14px;color:#c9dbf8;margin-top:6px;">Thanks for reaching out, ' . $safeName . '.</div>'
+    . '</div>'
+    . '<div style="padding:22px;">'
+    . '<p style="margin:0 0 14px 0;font-size:14px;line-height:1.7;color:#dce6f5;">I have received your message and will get back to you within 24 hours.</p>'
+    . '<div style="background:#0d1525;border:1px solid #22344f;border-radius:10px;padding:14px;margin:16px 0;">'
+    . '<div style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#88a2c8;margin-bottom:8px;">Your Message</div>'
+    . '<div style="font-size:14px;line-height:1.6;color:#dce6f5;">' . $safeMessageHtml . '</div>'
+    . '</div>'
+    . '<a href="' . $appUrl . '" style="display:inline-block;background:#3b82f6;color:#ffffff;text-decoration:none;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;">Visit Portfolio</a>'
+    . '<p style="margin:18px 0 0 0;font-size:13px;color:#98adcf;">Best regards,<br>' . $appName . '</p>'
+    . '</div>'
+    . '</div>'
+    . '</div>';
 $ackResult = send_mail($email, $ackSubject, $ackText, $ackHtml);
 $ackSent = (bool)($ackResult['sent'] ?? false);
 $ackError = (string)($ackResult['error'] ?? '');
